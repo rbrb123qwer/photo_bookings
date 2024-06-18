@@ -1,3 +1,18 @@
+<?php   
+$user_id = $_SESSION['user_id'];
+
+if (!isset($_SESSION["user_id"])){
+    header("Location: login.php");
+    exit();
+}
+
+// Include the PDO connection
+include 'config.php';
+
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -221,7 +221,7 @@ if (isset($message)) {
         <div class="form-group">
             <label for="payment_method">Payment Method</label>
             <select id="payment_method" name="payment_method" class="form-control">
-                <option value="Gcash">Gcash (0000-000-0000) - (Jang Wonyoung) </option>
+                <option value="Gcash">Gcash no. (0928-468-0000) - (RO**Y C.) </option>
             </select>
         </div>
         <div class="form-group">

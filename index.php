@@ -1,13 +1,7 @@
 <?php
 @include 'config.php';
 
-session_start();
 
-$user_id = $_SESSION['user_id'];
-
-if (!isset($_SESSION["user_id"])) {
-    header("Location: login.php");
-}
 
 try {
     $sql = "SELECT * FROM packages";
@@ -17,16 +11,7 @@ try {
     echo "Error: " . $e->getMessage();
 }
 
-try {
-    $query = "SELECT name FROM users WHERE user_type = 'user' AND id = :user_id";
-    $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':user_id', $user_id);
-    $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    $userName = ($row) ? $row['name'] : "User";
-} catch (PDOException $e) {
-    echo "Error: " . $e->getMessage();
-}
+
 ?>
 
 <!DOCTYPE html>
@@ -120,20 +105,20 @@ try {
             <a href="demovideo.php" class="nav-link m-2 menu-item">Demo Video</a>
           </li>
           <li class="nav-item">
-            <a href="booking_history.php" class="nav-link m-2 menu-item">Booking History</a>
+            <a href="booking_history.php" id="bookingHistoryLink" class="nav-link m-2 menu-item">Booking History</a>
           </li>
           <li class="nav-item">
-            <a href="booking.php" class="btn btn-danger nav-link m-2 menu-item-btn">Book Now!</a>
+            <a href="booking.php"  id="bookNowBtn" class="btn btn-danger nav-link m-2 menu-item-btn">Book Now!</a>
           </li>
           <li>
             <div class="dropdown">
               <button class="btn btn-primary dropdown-toggle mt-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
-                  Hello, <?php echo $userName; ?>
+                  Hello, Signup Now!
               </button>
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <li><a class="dropdown-item" href="user_profile.php?user_id=<?php echo $user_id; ?>">Profile</a></li>
-                  <li><a class="dropdown-item" href="index.php">Sign out</a></li>
-              </ul>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" href="register.php">Sign up</a></li>
+                    <li><a class="dropdown-item" href="login.php">Sign In</a></li>
+                </ul>
             </div>
           </li>
         </ul>
@@ -318,7 +303,7 @@ try {
           <h5 class="pb-3">Quick Links</h5>
           <ul class="list-unstyled">
             <li>
-              <a href="#" class="footer-link" style="cursor: pointer;">Home</a>
+              <a href="#" class="footer-link">Home</a>
             </li>
             <li>
               <a href="#about" class="footer-link">About</a>
@@ -391,6 +376,26 @@ try {
           });
       });
   });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('bookNowBtn').addEventListener('click', function(event) {
+        var isLoggedIn = <?php echo isset($_SESSION["user_id"]) ? 'true' : 'false'; ?>;
+        if (!isLoggedIn) {
+            event.preventDefault(); // Prevent the default action (redirecting to booking.php)
+            alert('Please register or log in first to access this feature.');
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('bookingHistoryLink').addEventListener('click', function(event) {
+        var isLoggedIn = <?php echo isset($_SESSION["user_id"]) ? 'true' : 'false'; ?>;
+        if (!isLoggedIn) {
+            event.preventDefault(); // Prevent the default action (redirecting to booking_history.php)
+            alert('Please register or log in first to access this feature.');
+        }
+    });
+});
   </script>
 
   <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
