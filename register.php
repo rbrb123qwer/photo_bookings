@@ -1,5 +1,4 @@
 <?php
-
 @include 'config.php';
 
 session_start();
@@ -12,31 +11,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $last_name = $_POST['last_name'];
     $email = $_POST['email'];
     $phone_number = $_POST['phone_number'];
-    $password = password_hash($_POST['password'], PASSWORD_BCRYPT); // Securely hash the password
+    $password = $_POST['password'];
     $user_type = 'user'; // Default user type
 
-    // Check for existing email
-    $checkQuery = "SELECT * FROM users WHERE email=?";
-    $stmt = $pdo->prepare($checkQuery);
-    $stmt->execute([$email]);
-    $result = $stmt->fetchAll();
-
-    if (count($result) > 0) {
-        $alertMessage = "Email already exists.";
+    // Server-side password validation
+    if (strlen($password) < 8 || 
+        !preg_match('/[A-Z]/', $password) || 
+        !preg_match('/[a-z]/', $password) || 
+        !preg_match('/[0-9]/', $password) || 
+        !preg_match('/[!@#\$%\^&\*]/', $password)) {
+        $alertMessage = "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.";
         $alertClass = "alert-danger";
     } else {
-        // Use prepared statements to insert data
-        $sql = "INSERT INTO users (name, phone, email, password, user_type, created_at) VALUES (?, ?, ?, ?, ?, CURDATE())";
-        $stmt = $pdo->prepare($sql);
-        $full_name = $first_name . ' ' . $last_name;
-        $stmt->execute([$full_name, $phone_number, $email, $password, $user_type]);
+        $password = password_hash($password, PASSWORD_BCRYPT); // Securely hash the password
 
-        if ($stmt->rowCount() > 0) {
-            $alertMessage = "Registered Successfully";
-            $alertClass = "alert-success";
-        } else {
-            $alertMessage = "Error: " . $stmt->errorInfo()[2];
+        // Check for existing email
+        $checkQuery = "SELECT * FROM users WHERE email=?";
+        $stmt = $pdo->prepare($checkQuery);
+        $stmt->execute([$email]);
+        $result = $stmt->fetchAll();
+
+        if (count($result) > 0) {
+            $alertMessage = "Email already exists.";
             $alertClass = "alert-danger";
+        } else {
+            // Use prepared statements to insert data
+            $sql = "INSERT INTO users (name, phone, email, password, user_type, created_at) VALUES (?, ?, ?, ?, ?, CURDATE())";
+            $stmt = $pdo->prepare($sql);
+            $full_name = $first_name . ' ' . $last_name;
+            $stmt->execute([$full_name, $phone_number, $email, $password, $user_type]);
+
+            if ($stmt->rowCount() > 0) {
+                $alertMessage = "Registered Successfully";
+                $alertClass = "alert-success";
+            } else {
+                $alertMessage = "Error: " . $stmt->errorInfo()[2];
+                $alertClass = "alert-danger";
+            }
         }
     }
 }
@@ -62,10 +73,6 @@ body{
     background-color: #ffffff;
     background-size: cover;
     display: flex;
-    
-
-
-
 }
 #screen{
     background-color: white;
@@ -75,9 +82,6 @@ body{
     margin-left: 450px;
     margin-right: auto;
     align-items: center;
-   
-
-    
 }
 #login{
     margin: 20px;
@@ -109,18 +113,15 @@ body{
 .other-login .btn-other-login:hover{
     background-color: #ced4da;
 }
-
 .dev{
     margin-top: 5px;
 }
 .dev a,.n-psw a {
     text-decoration: none;
 }
-
 .row.g-1 {
     gap: 0.2rem; 
 }
-
 .alert-container {
     position: absolute;
     top: 10px;
@@ -129,109 +130,114 @@ body{
     width: auto;
     z-index: 1000;
 }
-
 @media (max-width: 576px) {
     .alert-container {
         top: 50px;
     }
-
     #screen {
         padding: 1rem; 
     }
-
     #login {
         margin: 10px;
     }
 }
-
-
-
 </style>
+
+<script>
+function validatePassword() {
+    var password = document.getElementById('floatingPassword').value;
+    var errorMessage = '';
+    
+    if (password.length < 8) {
+        errorMessage += 'Password must be at least 8 characters long.\n';
+    }
+    if (!/[A-Z]/.test(password)) {
+        errorMessage += 'Password must contain at least one uppercase letter.\n';
+    }
+    if (!/[a-z]/.test(password)) {
+        errorMessage += 'Password must contain at least one lowercase letter.\n';
+    }
+    if (!/[0-9]/.test(password)) {
+        errorMessage += 'Password must contain at least one number.\n';
+    }
+    if (!/[!@#\$%\^&\*]/.test(password)) {
+        errorMessage += 'Password must contain at least one special character.\n';
+    }
+    
+    if (errorMessage) {
+        alert(errorMessage);
+        return false;
+    }
+    return true;
+}
+</script>
 
 </head>
 
 <body>
 
 <?php if (!empty($alertMessage)): ?>
-        <div class="alert-container">
-            <div class="alert <?php echo $alertClass; ?> alert-dismissible fade show" role="alert">
-                <?php echo $alertMessage; ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+    <div class="alert-container">
+        <div class="alert <?php echo $alertClass; ?> alert-dismissible fade show" role="alert">
+            <?php echo $alertMessage; ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+    </div>
 <?php endif; ?>
 
+<div class="container" id="screen">
+    <div class="row">   
+        <div class="col-lg-6 my-auto">  
+            <div id="login">
+                <form method="POST" action="" onsubmit="return validatePassword()">   
+                    <h4 class="text-black">Welcome to RC Studio PhotoBooth</h4>
+                    <p class="text-black">Please sign up to use our platform</p>
 
-
-    <div class="container " id="screen">
-        <div class="row">   
-            <div class="col-lg-6 my-auto">  
-                <div id="login">
-                    <form method="POST" action="">   
-                        <h4 class="text-black">
-                            Welcome to Rc Studio PhotoBooth 
-                        </h4>
-                        <p class="text-black">
-                            Please sign up to use our platform
-                        </p>
-
-                        <div class="row mb-2 g-1">
-                            <div class="col">
-                                <div class="form-floating text-black">
-                                    <input type="text" class="form-control" id="floatingFirstName" name="first_name" placeholder="Enter First Name" required>
-                                    <label for="floatingFirstName">First Name</label>
-                                </div>
+                    <div class="row mb-2 g-1">
+                        <div class="col">
+                            <div class="form-floating text-black">
+                                <input type="text" class="form-control" id="floatingFirstName" name="first_name" placeholder="Enter First Name" required>
+                                <label for="floatingFirstName">First Name</label>
                             </div>
-
-                            <div class="col">
-                                <div class="form-floating text-black">
-                                    <input type="text" class="form-control" id="floatingLastName" name="last_name" placeholder="Enter Last Name" required>
-                                    <label for="floatingLastName">Last Name</label>
-                                </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-floating text-black">
+                                <input type="text" class="form-control" id="floatingLastName" name="last_name" placeholder="Enter Last Name" required>
+                                <label for="floatingLastName">Last Name</label>
                             </div>
-
                         </div>
+                    </div>
 
-                        <div class="form-floating mb-2 text-black">
-                            <input type="email" class="form-control" id="floatingEmail" name="email" placeholder="Enter Email" required>
-                            <label for="floatingEmail">Email</label>
-                        </div>
+                    <div class="form-floating mb-2 text-black">
+                        <input type="email" class="form-control" id="floatingEmail" name="email" placeholder="Enter Email" required>
+                        <label for="floatingEmail">Email</label>
+                    </div>
 
-                        <div class="form-floating mb-2 text-black">
-                            <input type="password" class="form-control" id="floatingEmail" name="password" placeholder="Enter Password" required>
-                            <label for="floatingEmail">Password</label>
-                        </div>
+                    <div class="form-floating mb-2 text-black">
+                        <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Enter Password" required>
+                        <label for="floatingPassword">Password</label>
+                    </div>
 
-                        <div class="form-floating mb-2 text-black">
-                            <input type="text" class="form-control" id="floatingPhoneNumber" name="phone_number" placeholder="Enter Phone Number" required>
-                            <label for="floatingPhoneNumber">Phone Number</label>
-                        </div>
+                    <div class="form-floating mb-2 text-black">
+                        <input type="text" class="form-control" id="floatingPhoneNumber" name="phone_number" placeholder="Enter Phone Number" required>
+                        <label for="floatingPhoneNumber">Phone Number</label>
+                    </div>
 
-                        <button type="submit" class="btn btn-login">
-                            SIGN UP
-                        </button>
-                    </form>  <!-- Form End -->
-                    
-                    <!--Sign IN-->
-                    <div class="text-center text-muted mt-2 mb-0" style="font-size:14px;"> 
-                        Already have an account? 
-                        <a href="login.php" class="text-primary text-decoration-none">
-                            Sign In
-                        </a>
-                    </div>  
-                    <!--Sign In End-->
-                </div>
-            </div>  
-            
-            
-        </div>  <!--row End-->
+                    <button type="submit" class="btn btn-login">SIGN UP</button>
+                </form>  <!-- Form End -->
 
-     
-      
+                <!-- Sign In -->
+                <div class="text-center text-muted mt-2 mb-0" style="font-size:14px;"> 
+                    Already have an account? 
+                    <a href="login.php" class="text-primary text-decoration-none">Sign In</a>
+                </div>  
+                <!-- Sign In End -->
+            </div>
+        </div>  
+    </div> <!-- Row End -->
+</div> <!-- Container End -->
 
-    </div> <!-- Container End-->
-
- <!-- Option 1: Bootstrap Bundle with Popper -->
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
+<!-- Option 1: Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
 </body>
 </html>

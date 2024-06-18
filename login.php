@@ -165,7 +165,7 @@ body{
 
                     <form method="POST" action="">
                         <h4>
-                            Welcome to Rc Studio Photobooth
+                            Welcome to RC Studio Photobooth
                         </h4>
                         <p class="text-muted">
                             Please login to use the platform
@@ -201,15 +201,7 @@ body{
                             Sign up
                         </a>
                     </div>
-                    <div class="other-login">
-                        <button class="btn btn-other-login btn-light">
-                            <img src="img/google-icon.png" alt="Google-icon">
-                            Login with Google
-                        </button>
-                        <button class="btn btn-other-login btn-primary">
-                            <img src="img/facebook-icon.png" alt="Facebook-icon">
-                            Login with Facebook
-                        </button>
+                    
                     </div>
                 </div>
             </div>

@@ -147,7 +147,7 @@ $packages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             <div class="mb-3">
                 <label for="bookingDate" class="form-label">Booking Date</label>
-                <input type="date" class="form-control" id="bookingDate" name="bookingDate">
+                <input type="date" class="form-control" id="bookingDate" name="bookingDate" min="<?php echo date('Y-m-d'); ?>">
             </div>
 
             <div class="mb-3">

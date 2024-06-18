@@ -12,10 +12,28 @@ if (!isset($admin_id)) {
 if (isset($_POST['update_payment'])) {
     $payment_id = $_POST['payment_id'];
     $update_status = $_POST['update_status'];
+
+    // Update the payment status
     $stmt = $pdo->prepare("UPDATE `payments` SET payment_status = :update_status WHERE payment_id = :payment_id");
     $stmt->bindParam(':update_status', $update_status);
     $stmt->bindParam(':payment_id', $payment_id);
     $stmt->execute();
+
+    // Check if the payment status was updated to "Paid"
+    if ($update_status == 'completed') {
+        // Get the booking ID associated with this payment
+        $stmt = $pdo->prepare("SELECT booking_id FROM `payments` WHERE payment_id = :payment_id");
+        $stmt->bindParam(':payment_id', $payment_id);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $booking_id = $row['booking_id'];
+
+        // Update the booking status to "Completed"
+        $stmt = $pdo->prepare("UPDATE `Bookings` SET status = 'completed' WHERE booking_id = :booking_id");
+        $stmt->bindParam(':booking_id', $booking_id);
+        $stmt->execute();
+    }
+
     $message[] = 'Payment status has been updated!';
 }
 

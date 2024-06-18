@@ -28,6 +28,40 @@ if (isset($_GET['delete'])) {
     header('location:admin_booking.php');
 }
 
+if (!empty($row) && isset($row['status']) && isset($row['payment_status'])) {
+    $status = $row['status'];
+    $payment_status = $row['payment_status'];
+
+    // Determine the display status based on payment status if available, else use booking status
+    if ($payment_status == 'completed') {
+        $display_status = 'Completed';
+        $color = 'green';
+    } elseif ($payment_status == 'pending') {
+        $display_status = 'Pending';
+        $color = 'yellow';
+    } else {
+        $display_status = ucfirst($status);
+        $color = match ($status) {
+            'completed' => 'green',
+            'pending' => 'orange',
+            'confirmed' => 'blue',
+            'canceled' => 'red',
+            default => 'black',
+        };
+    }
+
+    // Display the status
+    echo "<td><span style='color: $color;'>$display_status</span></td>";
+} else {
+    // Handle case where $row is empty or does not contain the expected keys
+    echo "<td>Status not available</td>";
+}
+
+
+$pendingBookingsAmountQuery = "SELECT SUM(pk.price) AS pending_amount FROM bookings b JOIN packages pk ON b.package_id = pk.package_id WHERE b.status = 'pending'";
+$pendingBookingsAmountResult = $pdo->query($pendingBookingsAmountQuery);
+$pendingBookingsAmountRow = $pendingBookingsAmountResult->fetch(PDO::FETCH_ASSOC);
+$pendingBookingsAmount = $pendingBookingsAmountRow['pending_amount'] ?? 0;
 
 
 

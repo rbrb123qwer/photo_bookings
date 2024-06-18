@@ -57,6 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
+    
+
     if ($update_query->execute()) {
         if (empty($message)) { // Ensure that a message was not already set by the password update logic
             $message = "Profile updated successfully!";
@@ -72,6 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user = $user_info->fetch(PDO::FETCH_ASSOC);
 }
 
+
+
 ?>
 
 <style>
@@ -85,6 +89,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
 </style>
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -104,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="container mt-5 text-white">
         <h2>User Profile</h2>
         <?php if (!empty($message)) { echo "<div class='alert alert-info'>$message</div>"; } ?>
-        <form method="POST" action="">
+        <form method="POST" action="" id="profileForm">
             <div class="form-group">
                 <label for="name">Name</label>
                 <input type="text" class="form-control" id="name" name="name" value="<?php echo htmlspecialchars($user['name']); ?>">
@@ -140,5 +147,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="submit" class="btn btn-primary">Update Profile</button>
         </form>
     </div>
+
+
+    <script>
+document.getElementById('profileForm').addEventListener('submit', function(event) {
+    var newPassword = document.getElementById('new_password').value;
+    var confirmPassword = document.getElementById('confirm_password').value;
+    var passwordStrength = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
+
+    if (!passwordStrength.test(newPassword)) {
+        alert('Password must be at least 8 characters long and contain at least one digit, one lowercase letter, one uppercase letter, and one special character (!@#$%^&*)');
+        event.preventDefault();
+    } else if (newPassword !== confirmPassword) {
+        alert('Passwords do not match.');
+        event.preventDefault();
+    }
+});
+</script>
 </body>
 </html>
