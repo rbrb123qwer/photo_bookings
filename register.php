@@ -14,6 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
     $user_type = 'user'; // Default user type
 
+ 
+    
+        
+
     // Server-side password validation
     if (strlen($password) < 8 || 
         !preg_match('/[A-Z]/', $password) || 
@@ -146,6 +150,7 @@ body{
 <script>
 function validatePassword() {
     var password = document.getElementById('floatingPassword').value;
+    var phoneNumber = document.getElementById('floatingPhoneNumber').value;
     var errorMessage = '';
     
     if (password.length < 8) {
@@ -162,6 +167,10 @@ function validatePassword() {
     }
     if (!/[!@#\$%\^&\*]/.test(password)) {
         errorMessage += 'Password must contain at least one special character.\n';
+    }
+
+    if (phoneNumber.length !== 11) {
+        errorMessage += 'Phone number must be exactly 11 characters long.\n';
     }
     
     if (errorMessage) {

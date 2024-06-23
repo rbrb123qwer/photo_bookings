@@ -102,7 +102,7 @@ try {
             <a href="#contacts" class="nav-link m-2 menu-item">Contact</a>
           </li>
           <li class="nav-item">
-            <a href="demovideo.php" class="nav-link m-2 menu-item">Demo Video</a>
+            <a href="demovideo.php" id="demovid" class="nav-link m-2 menu-item">Demo Video</a>
           </li>
           <li class="nav-item">
             <a href="booking_history.php" id="bookingHistoryLink" class="nav-link m-2 menu-item">Booking History</a>
@@ -342,12 +342,12 @@ try {
           <form class="mb-3">
             <div class="input-group">
               <div class="input-group-append">
-                <a href="booking.php"><button type="button" class="btn bg-light text-black text-uppercase font-weight-bold">Book Now!</button></a>
+                <a href="booking.php" id="lowerbook"><button type="button" id="lowerbook" class="btn bg-danger text-light text-uppercase font-weight-bold">Book Now!</button></a>
               </div>
             </div>
           </form>
           <ul class="list-inline">
-            <a href="https://www.facebook.com/rcstudiophotobooth"><li class="list-inline-item"><i class="fab fa-facebook-square fa-2x text-dark"></i></li></a>
+            <a href="https://www.facebook.com/rcstudiophotobooth"><li class="list-inline-item">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<i class="fab fa-facebook-square fa-2x text-primary"></i></li></a>
           </ul>
         </div>
       </div>
@@ -389,6 +389,27 @@ try {
 
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('bookingHistoryLink').addEventListener('click', function(event) {
+        var isLoggedIn = <?php echo isset($_SESSION["user_id"]) ? 'true' : 'false'; ?>;
+        if (!isLoggedIn) {
+            event.preventDefault(); // Prevent the default action (redirecting to booking_history.php)
+            alert('Please register or log in first to access this feature.');
+        }
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('demovid').addEventListener('click', function(event) {
+        var isLoggedIn = <?php echo isset($_SESSION["user_id"]) ? 'true' : 'false'; ?>;
+        if (!isLoggedIn) {
+            event.preventDefault(); // Prevent the default action (redirecting to booking_history.php)
+            alert('Please register or log in first to access this feature.');
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('lowerbook').addEventListener('click', function(event) {
         var isLoggedIn = <?php echo isset($_SESSION["user_id"]) ? 'true' : 'false'; ?>;
         if (!isLoggedIn) {
             event.preventDefault(); // Prevent the default action (redirecting to booking_history.php)

@@ -80,13 +80,26 @@ try {
 
     .text-info {
       cursor: pointer;
+      
     }
 
     .nav-link.active {
       background-color: #40cce1;
-      color: white !important;
+      color: black !important;
       border-radius: 15px;
     }
+
+    /* Custom styles for the footer links */
+    .footer-link {
+      color:  #40cce1 !important;
+    }
+    .footer-link:hover {
+      color:  #40cce1 !important;
+    }
+
+    
+
+
   </style>
 </head>
 <body>
@@ -95,14 +108,14 @@ try {
   <header>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg fixed-top nav-menu">
-      <a href="#" class="navbar-brand text-light text-uppercase"><span class="h3 font-weight-bold text-dark">RC </span><br><span class="h3 text-dark">Studio Photobooth</span></a>
+      <a href="" class="navbar-brand text-light text-uppercase"><span class="h3 font-weight-bold text-dark">RC </span><br><span class="h3 text-dark">Studio Photobooth</span></a>
       <button class="navbar-toggler nav-button" type="button" data-toggle="collapse" data-target="#myNavbar">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse justify-content-end font-weight-bold" id="myNavbar">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a href="#" class="nav-link m-2 menu-item">Home</a>
+            <a href="" class="nav-link m-2 menu-item">Home</a>
           </li>
           <li class="nav-item">
             <a href="#about" class="nav-link m-2 menu-item">About</a>
@@ -318,7 +331,7 @@ try {
           <h5 class="pb-3">Quick Links</h5>
           <ul class="list-unstyled">
             <li>
-              <a href="#" class="footer-link" style="cursor: pointer;">Home</a>
+              <a href="" class="footer-link" style="cursor: pointer;">Home</a>
             </li>
             <li>
               <a href="#about" class="footer-link">About</a>
@@ -357,12 +370,12 @@ try {
           <form class="mb-3">
             <div class="input-group">
               <div class="input-group-append">
-                <a href="booking.php"><button type="button" class="btn bg-light text-black text-uppercase font-weight-bold">Book Now!</button></a>
+                <a href="booking.php"><button type="button" class="btn bg-danger text-light text-uppercase font-weight-bold">Book Now!</button></a>
               </div>
             </div>
           </form>
           <ul class="list-inline">
-            <a href="https://www.facebook.com/rcstudiophotobooth"><li class="list-inline-item"><i class="fab fa-facebook-square fa-2x text-dark"></i></li></a>
+            <a href="https://www.facebook.com/rcstudiophotobooth"><li class="list-inline-item">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<i class="fab fa-facebook-square fa-2x text-primary"></i></li></a>
           </ul>
         </div>
       </div>

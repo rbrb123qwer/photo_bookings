@@ -151,15 +151,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <script>
 document.getElementById('profileForm').addEventListener('submit', function(event) {
+    var currentPassword = document.getElementById('current_password').value;
     var newPassword = document.getElementById('new_password').value;
     var confirmPassword = document.getElementById('confirm_password').value;
+    var phone = document.getElementById('phone').value;
+    var email = document.getElementById('email').value;
     var passwordStrength = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
+
+    // Check if current password is empty and new password and confirm password are also empty
+    if (currentPassword.trim() === '' && newPassword.trim() === '' && confirmPassword.trim() === '') {
+        return; // Skip password validation
+    }
 
     if (!passwordStrength.test(newPassword)) {
         alert('Password must be at least 8 characters long and contain at least one digit, one lowercase letter, one uppercase letter, and one special character (!@#$%^&*)');
         event.preventDefault();
     } else if (newPassword !== confirmPassword) {
         alert('Passwords do not match.');
+        event.preventDefault();
+    }
+
+    // Phone number validation
+    if (phone.length !== 11) {
+        alert('Phone number must be exactly 11 characters long.');
+        event.preventDefault();
+    }
+
+    // Email validation
+    if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+        alert('Email must be a valid email address.');
         event.preventDefault();
     }
 });

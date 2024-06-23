@@ -1,13 +1,10 @@
 <?php   
-$user_id = $_SESSION['user_id'];
 
-if (!isset($_SESSION["user_id"])){
-    header("Location: login.php");
-    exit();
-}
 
-// Include the PDO connection
-include 'config.php';
+
+
+
+
 
 
 
@@ -71,12 +68,7 @@ include 'config.php';
     <br>
 
 
-    <h1>PAANO GAMITIN ANG AMING WEBSITE?</h1>
-    <h2>Tagalog</h2>
-    <video controls>
-        <source src="video/tagalogtutorial.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
+   
 </div>
 </body>
 </html>
