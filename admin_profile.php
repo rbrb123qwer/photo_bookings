@@ -118,23 +118,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </form>
     </div>
 
-
     <script>
 document.getElementById('profileForm').addEventListener('submit', function(event) {
     var newPassword = document.getElementById('new_password').value;
     var confirmPassword = document.getElementById('confirm_password').value;
     var passwordStrength = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
 
-    if (!passwordStrength.test(newPassword)) {
-        alert('Password must be at least 8 characters long and contain at least one digit, one lowercase letter, one uppercase letter, and one special character (!@#$%^&*)');
-        event.preventDefault();
-    } else if (newPassword !== confirmPassword) {
-        alert('Passwords do not match.');
-        event.preventDefault();
+    if (newPassword !== '' || confirmPassword !== '') {
+        if (!passwordStrength.test(newPassword)) {
+            alert('Password must be at least 8 characters long and contain at least one digit, one lowercase letter, one uppercase letter, and one special character (!@#$%^&*)');
+            event.preventDefault();
+        } else if (newPassword !== confirmPassword) {
+            alert('Passwords do not match.');
+            event.preventDefault();
+        }
     }
 });
 </script>
 </body>
 </html>
-
-
